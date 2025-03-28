@@ -24,14 +24,25 @@ import com.entity.view.DictionaryView;
 @Transactional
 public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, DictionaryEntity> implements DictionaryService {
 
+    /**
+     * 重写查询页面方法，用于字典视图的分页查询
+     * 此方法在参数中缺少页码或每页限制时，提供默认值，并执行查询
+     *
+     * @param params 查询参数，包括页码和每页记录数
+     * @return 返回封装了查询结果的PageUtils对象
+     */
     @Override
     public PageUtils queryPage(Map<String,Object> params) {
+        // 检查参数是否为空，或是否缺少页码和每页记录数，若缺少，则设置默认值
         if(params != null && (params.get("limit") == null || params.get("page") == null)){
             params.put("page","1");
             params.put("limit","10");
         }
+        // 创建并获取Query对象的Page实例，用于执行分页查询
         Page<DictionaryView> page =new Query<DictionaryView>(params).getPage();
+        // 设置分页查询结果，执行实际的数据库查询操作
         page.setRecords(baseMapper.selectListView(page,params));
+        // 将分页查询结果封装到PageUtils对象中，准备返回
         return new PageUtils(page);
     }
 

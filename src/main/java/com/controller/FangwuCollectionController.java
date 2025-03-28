@@ -66,17 +66,22 @@ public class FangwuCollectionController {
     */
     @RequestMapping("/page")
     public R page(@RequestParam Map<String, Object> params, HttpServletRequest request){
+        // 日志记录类名以及参数
         logger.debug("page方法:,,Controller:{},,params:{}",this.getClass().getName(),JSONObject.toJSONString(params));
+        // 获取角色
         String role = String.valueOf(request.getSession().getAttribute("role"));
-        if(false)
+        // 判断角色
+        if(false)// 预留条件
             return R.error(511,"永不会进入");
-        else if("用户".equals(role))
+        else if("用户".equals(role))// 先字符串后equals以防空指针异常
             params.put("yonghuId",request.getSession().getAttribute("userId"));
         else if("商家".equals(role))
             params.put("shangjiaId",request.getSession().getAttribute("userId"));
         if(params.get("orderBy")==null || params.get("orderBy")==""){
+            // 默认按照id排序
             params.put("orderBy","id");
         }
+        // 根据传入的参数分页查询（基于mybatisplus实现的分页查询）
         PageUtils page = fangwuCollectionService.queryPage(params);
 
         //字典表数据转换
