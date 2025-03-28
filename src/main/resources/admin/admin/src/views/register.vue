@@ -1,5 +1,5 @@
 <template>
-    <div style="backgroundImage: url('/qingniangongyufuwupingtai/img/back-img-bg.jpg');background-size:cover;">
+    <div style="backgroundImage: url('/img/img/back-img-bg.jpg');background-size:cover;">
         <div class="container">
             <div class="login-form" style="backgroundColor:rgba(183, 174, 174, 0.5);borderRadius:22px">
                 <h1 class="h1" style="color:#000;fontSize:28px;">青年公寓服务平台注册</h1>
@@ -175,15 +175,16 @@
         margin: 0;
     }
 
-    // .container {
-       //    min-height: 100vh;
-       //    text-align: center;
-       //    // background-color: #00c292;
-       //    padding-top: 20vh;
-       //    background-image: url(../assets/img/bg.jpg);
-       //    background-size: 100% 100%;
-       //    opacity: 0.9;
-       //  }
+
+     .container {
+           min-height: 100vh;
+           text-align: center;
+            background-color: #00c292;
+           padding-top: 20vh;
+           background-image: url(../assets/img/bg.jpg);
+           background-size: 100% 100%;
+           opacity: 0.9;
+         }
 
     // .login-form:before {
        // 	vertical-align: middle;
