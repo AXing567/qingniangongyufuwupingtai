@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.entity.BokeEntity;
 import com.entity.YonghuEntity;
 import com.entity.view.BokeView;
+import com.entity.view.FangwuView;
 import com.service.BokeService;
 import com.service.DictionaryService;
 import com.service.TokenService;
@@ -75,11 +76,16 @@ public class BokeController {
         }
         PageUtils page = bokeService.queryPage(params);
 
-        //字典表数据转换
         List<BokeView> list =(List<BokeView>)page.getList();
         for(BokeView c:list){
             //修改对应字典表字段
             dictionaryService.dictionaryConvert(c, request);
+
+            // 修改所有的fangwu_photo字段，如果有多余的图片url，则去除
+            if (c.getBokePhoto() != null && c.getBokePhoto().contains(",")) {
+                String[] urls = c.getBokePhoto().split(",");
+                c.setBokePhoto(urls[0]);
+            }
         }
         return R.ok().put("data", page);
     }

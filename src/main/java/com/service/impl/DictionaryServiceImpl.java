@@ -57,14 +57,19 @@ public class DictionaryServiceImpl extends ServiceImpl<DictionaryDao, Dictionary
             List<String> fieldNameList = new ArrayList<>();
             Class tempClass = obj.getClass();
             while (tempClass !=null) {
+                // 获得该类里所有字段，但不含继承的
                 Field[] declaredFields = tempClass.getDeclaredFields();
                 for (Field f : declaredFields) {
+                    // 抑制语言访问检查
                     f.setAccessible(true);
+                    // 判断字段类型是否是Integer类型，并且字段名是否包含Types
                     if (f.getType().getName().equals("java.lang.Integer") && f.getName().contains("Types")) {
+                        // 将字段名添加到列表中
                         fieldNameList.add(f.getName());
                     }
                 }
-                tempClass = tempClass.getSuperclass(); //得到父类,然后赋给自己
+                //得到父类,然后赋给自己
+                tempClass = tempClass.getSuperclass();
             }
 
             // 获取监听器中的字典表

@@ -144,8 +144,10 @@ public class YonghuController {
         logger.debug("update方法:,,Controller:{},,yonghu:{}",this.getClass().getName(),yonghu.toString());
 
         String role = String.valueOf(request.getSession().getAttribute("role"));
-//        if(false)
-//            return R.error(511,"永远不会进入");
+        // 如果用戶头像为多个或者为空，那么返回错误
+        if(yonghu.getYonghuPhoto()==null || "".equals(yonghu.getYonghuPhoto()) || yonghu.getYonghuPhoto().split(",").length>1){
+            return R.error(511,"用户头像为多个或者为空，不允许修改");
+        }
         //根据字段查询是否有相同数据
         Wrapper<YonghuEntity> queryWrapper = new EntityWrapper<YonghuEntity>()
             .notIn("id",yonghu.getId())
@@ -307,11 +309,6 @@ public class YonghuController {
             return R.error("账号或密码不正确");
         else if(yonghu.getYonghuShiyongTypes() != 1)
             return R.error("账户已被禁用,如有疑问,请联系管理员");
-        //  // 获取监听器中的字典表
-        // ServletContext servletContext = ContextLoader.getCurrentWebApplicationContext().getServletContext();
-        // Map<String, Map<Integer, String>> dictionaryMap= (Map<String, Map<Integer, String>>) servletContext.getAttribute("dictionaryMap");
-        // Map<Integer, String> role_types = dictionaryMap.get("role_types");
-        // role_types.get(.getRoleTypes());
         String token = tokenService.generateToken(yonghu.getId(),username, "yonghu", "用户");
         R r = R.ok();
         r.put("token", token);
@@ -328,7 +325,6 @@ public class YonghuController {
     @IgnoreAuth
     @PostMapping(value = "/register")
     public R register(@RequestBody YonghuEntity yonghu){
-//    	ValidatorUtils.validateEntity(user);
         Wrapper<YonghuEntity> queryWrapper = new EntityWrapper<YonghuEntity>()
             .eq("username", yonghu.getUsername())
             .or()

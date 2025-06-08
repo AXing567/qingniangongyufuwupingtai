@@ -22,7 +22,7 @@ public class PageUtils implements Serializable {
 	private int currPage;
 	//列表数据
 	private List<?> list;
-	
+
 	/**
 	 * 分页
 	 * @param list        列表数据
@@ -39,16 +39,23 @@ public class PageUtils implements Serializable {
 	}
 
 	/**
-	 * 分页
+	 * 构造分页工具类实例
+	 *
+	 * @param page 分页对象，包含分页所需的信息如当前页、总记录数、页面大小等
 	 */
 	public PageUtils(Page<?> page) {
-		this.list = page.getRecords();
-		this.total = page.getTotal();
-		this.pageSize = page.getSize();
-		this.currPage = page.getCurrent();
-		this.totalPage = page.getPages();
+	    // 设置当前页的记录列表
+	    this.list = page.getRecords();
+	    // 设置总记录数
+	    this.total = page.getTotal();
+	    // 设置每页记录数
+	    this.pageSize = page.getSize();
+	    // 设置当前页码
+	    this.currPage = page.getCurrent();
+	    // 设置总页数
+	    this.totalPage = page.getPages();
 	}
-	
+
 	/*
 	 * 空数据的分页
 	 */
@@ -57,7 +64,7 @@ public class PageUtils implements Serializable {
 		new PageUtils(page);
 	}
 
-	 
+
 	public int getPageSize() {
 		return pageSize;
 	}
@@ -97,5 +104,5 @@ public class PageUtils implements Serializable {
 	public void setTotal(long total) {
 		this.total = total;
 	}
-	
+
 }

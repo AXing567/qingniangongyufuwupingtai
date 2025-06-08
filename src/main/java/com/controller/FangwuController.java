@@ -80,11 +80,16 @@ public class FangwuController {
         }
         PageUtils page = fangwuService.queryPage(params);
 
-        //字典表数据转换
         List<FangwuView> list =(List<FangwuView>)page.getList();
         for(FangwuView c:list){
             //修改对应字典表字段
             dictionaryService.dictionaryConvert(c, request);
+
+            // 修改所有的fangwu_photo字段，如果有多余的图片url，则去除
+            if (c.getFangwuPhoto() != null && c.getFangwuPhoto().contains(",")) {
+                String[] urls = c.getFangwuPhoto().split(",");
+                c.setFangwuPhoto(urls[0]);
+            }
         }
         return R.ok().put("data", page);
     }

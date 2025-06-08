@@ -59,6 +59,11 @@ public class FangwuLiuyanController {
     @Autowired
     private YonghuService yonghuService;
 
+    // 防抖时间间隔（单位：毫秒）
+    private static final long DEBOUNCE_INTERVAL = 1000; // 1秒
+
+    // 记录用户最后一次提交的时间
+    private Map<Integer, Long> lastSubmitTimeMap = new HashMap<>();
 
 
     /**
@@ -301,12 +306,33 @@ public class FangwuLiuyanController {
     */
     @RequestMapping("/add")
     public R add(@RequestBody FangwuLiuyanEntity fangwuLiuyan, HttpServletRequest request){
-        logger.debug("add方法:,,Controller:{},,fangwuLiuyan:{}",this.getClass().getName(),fangwuLiuyan.toString());
+        logger.debug("add方法:,,Controller:{},,fangwuLiuyan:{}", this.getClass().getName(), fangwuLiuyan.toString());
+
+        // 获取用户ID
+        Integer userId = (Integer) request.getSession().getAttribute("userId");
+        if (userId == null) {
+            return R.error("用户未登录");
+        }
+
+        // 检查防抖时间间隔
+        long currentTime = System.currentTimeMillis();
+        Long lastSubmitTime = lastSubmitTimeMap.get(userId);
+        if (lastSubmitTime != null && (currentTime - lastSubmitTime) < DEBOUNCE_INTERVAL) {
+            return R.error("请勿频繁提交，请稍后再试");
+        }
+
+        // 设置留言的插入时间和创建时间
         fangwuLiuyan.setInsertTime(new Date());
         fangwuLiuyan.setCreateTime(new Date());
+
+        // 插入留言
         fangwuLiuyanService.insert(fangwuLiuyan);
+
+        // 更新用户最后一次提交的时间
+        lastSubmitTimeMap.put(userId, currentTime);
+
         return R.ok();
-        }
+    }
 
 
 }
